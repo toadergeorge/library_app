@@ -1,0 +1,12 @@
+create table author
+(
+    id         int auto_increment
+        primary key,
+    first_name varchar(60) not null,
+    last_name  varchar(40) not null,
+    age int not null,
+    nationality varchar(60) not null
+    constraint UQ_SINGER_1
+        unique (FIRST_NAME, LAST_NAME)
+);
+
