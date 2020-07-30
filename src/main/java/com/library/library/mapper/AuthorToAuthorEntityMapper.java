@@ -13,6 +13,7 @@ public class AuthorToAuthorEntityMapper implements Converter<Author, AuthorEntit
     @Override
     public AuthorEntity convert(Author source) {
         return AuthorEntity.builder()
+                .id(source.getId())
                 .age(source.getAge())
                 .firstName(source.getFirstName())
                 .lastName(source.getLastName())

@@ -24,7 +24,7 @@ public class AuthorService {
 
     public Author findById(long authorId) {
         return repository.findById(authorId)
-                .map((AuthorEntity authorEntity) -> authorEntityToAuthorMapper.convert(authorEntity))
+                .map(authorEntityToAuthorMapper::convert)
                 .orElseThrow(() -> new AuthorNotFoundException("The album with id provided cannot be found"));
     }
 

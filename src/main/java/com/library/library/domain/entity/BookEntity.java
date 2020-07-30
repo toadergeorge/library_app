@@ -6,31 +6,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
-import java.util.List;
+import java.time.LocalDate;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "author")
+@Table(name = "book")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorEntity {
+public class BookEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private String firstName;
+    private String title;
 
-    private String lastName;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private AuthorEntity author;
 
-    private String nationality;
+    private LocalDate releaseYear;
 
-    private int age;
+    private String lang;
 
-    @OneToMany(mappedBy = "author")
-    private List<BookEntity> books;
+    private String numberOfPages;
 }
