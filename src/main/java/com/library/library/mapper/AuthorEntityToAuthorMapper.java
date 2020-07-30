@@ -15,6 +15,7 @@ public class AuthorEntityToAuthorMapper implements Converter<AuthorEntity, Autho
                     .id(source.getId())
                     .firstName(source.getFirstName())
                     .lastName(source.getLastName())
+                    .nationality(source.getNationality())
                     .age(source.getAge())
                     .build();
     }

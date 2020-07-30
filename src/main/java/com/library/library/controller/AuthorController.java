@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/author")
@@ -22,6 +23,31 @@ public class AuthorController {
     public Author getOneAuthor(@PathVariable("id") long id) {
 
         return service.findById(id);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Author> getAllAuthors() {
+        return service.getAll();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Author create(@RequestBody Author author) {
+        return service.create(author);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable("id") long id, @RequestBody Author author) {
+        author.setId(id);
+        service.updateTransactional(author);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") long id) {
+        service.delete(id);
     }
 
     @ExceptionHandler(AuthorNotFoundException.class)
