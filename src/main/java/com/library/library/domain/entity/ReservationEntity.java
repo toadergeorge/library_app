@@ -6,36 +6,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
-import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "user")
+@Table(name = "reservation")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
-
+public class ReservationEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private String firstName;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
-    private String lastName;
+    private String status;
 
-    private LocalDate dateOfBirth;
+    private String deliveryAddress;
 
-    private String country;
+    private LocalDate createdAt;
 
-    private String email;
-
-    private String city;
-
-    @OneToMany(mappedBy = "user")
-    private List<ReservationEntity> reservations;
+    private LocalDate updatedAt;
 }

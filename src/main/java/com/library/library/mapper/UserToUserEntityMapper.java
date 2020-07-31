@@ -15,6 +15,7 @@ public class UserToUserEntityMapper implements Converter<User, UserEntity> {
     @Override
     public UserEntity convert(User source) {
         return UserEntity.builder()
+                .id(source.getId())
                 .firstName(source.getFirstName())
                 .lastName(source.getLastName())
                 .email(source.getEmail())

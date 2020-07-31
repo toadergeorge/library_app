@@ -1,8 +1,8 @@
 package com.library.library.controller;
 
-import com.library.library.domain.model.Author;
-import com.library.library.exception.AuthorNotFoundException;
-import com.library.library.service.AuthorService;
+import com.library.library.domain.model.Reservation;
+import com.library.library.exception.ReservationNotFoundException;
+import com.library.library.service.ReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,46 +12,45 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/authors")
+@RequestMapping("/reservation")
 @AllArgsConstructor
 public class ReservationController {
 
-//    private final AuthorService service;
-//
-//    @GetMapping("/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Author getOneAuthor(@PathVariable("id") long id) {
-//
-//        return service.findById(id);
-//    }
-//
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<Author> getAllAuthors() {
-//        return service.getAll();
-//    }
-//
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public Author create(@RequestBody Author author) {
-//        return service.create(author);
-//    }
-//
-//    @PutMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void update(@PathVariable("id") long id, @RequestBody Author author) {
-//        author.setId(id);
-//        service.updateTransactional(author);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void delete(@PathVariable("id") long id) {
-//        service.delete(id);
-//    }
-//
-//    @ExceptionHandler(AuthorNotFoundException.class)
-//    public void notFound(HttpServletResponse response) throws IOException {
-//        response.sendError(HttpStatus.NOT_FOUND.value());
-//    }
+    private final ReservationService service;
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Reservation getOneReservation(@PathVariable("id") long id) {
+        return service.findById(id);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Reservation> getAllReservation() {
+        return service.getAll();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Reservation create(@RequestBody Reservation reservation) {
+        return service.create(reservation);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable("id") long id, @RequestBody Reservation reservation) {
+        reservation.setId(id);
+        service.updateTransactional(reservation);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") long id) {
+        service.delete(id);
+    }
+
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public void notFound(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.NOT_FOUND.value());
+    }
 }
