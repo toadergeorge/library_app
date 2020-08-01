@@ -28,10 +28,6 @@ public class ReservationBooksEntity {
     private ReservationEntity reservation;
 
     @ManyToOne
-    @JoinColumn(name = "book_id")
-    private BookEntity book;
-
-    @ManyToOne
     @JoinColumn(name = "book_user_id")
     private UserBookEntity userBook;
 

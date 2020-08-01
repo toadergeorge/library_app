@@ -1,7 +1,5 @@
 package com.library.library.domain.model;
 
-import com.library.library.domain.entity.BookEntity;
-import com.library.library.domain.entity.UserEntity;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,9 +9,9 @@ public class UserBook {
 
     private Long id;
 
-    private UserEntity user;
+    private User user;
 
-    private BookEntity book;
+    private Book book;
 
     private String status;
 }

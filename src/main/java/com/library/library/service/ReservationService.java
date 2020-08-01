@@ -1,20 +1,23 @@
 package com.library.library.service;
 
+import com.library.library.domain.entity.BookEntity;
+import com.library.library.domain.entity.ReservationBooksEntity;
 import com.library.library.domain.entity.ReservationEntity;
+import com.library.library.domain.entity.UserBookEntity;
 import com.library.library.domain.model.Book;
 import com.library.library.domain.model.Reservation;
 import com.library.library.domain.model.User;
+import com.library.library.domain.model.UserBook;
 import com.library.library.exception.AuthorNotFoundException;
-import com.library.library.mapper.BookEntityToBookMapper;
-import com.library.library.mapper.ReservationEntityToReservationMapper;
-import com.library.library.mapper.ReservationToReservationEntityMapper;
-import com.library.library.mapper.UserToUserEntityMapper;
+import com.library.library.mapper.*;
 import com.library.library.repository.BookRepository;
 import com.library.library.repository.ReservationRepository;
+import com.library.library.repository.UserBookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +27,15 @@ public class ReservationService {
 
     private final ReservationRepository repository;
     private final BookRepository bookRepository;
+    private final UserBookRepository userBookRepository;
 
     private final ReservationEntityToReservationMapper reservationEntityToReservationMapper;
     private final ReservationToReservationEntityMapper reservationToReservationEntityMapper;
     private final UserToUserEntityMapper userToUserEntityMapper;
     private final BookEntityToBookMapper bookEntityToBookMapper;
+    private final BookToBookEntityMapper bookToBookEntityMapper;
+    private final UserBookToUserBookEntityMapper userBookToUserBookEntityMapper;
+    private final UserBookEntityToUserBookMapper userBookEntityToUserBookMapper;
 
     private final UserService userService;
 
@@ -53,31 +60,38 @@ public class ReservationService {
     }
 
     @Transactional
-    public void createUserReservation(Long userId, Long reservationId, List<Book> userBooks) {
+    public void createUserReservation(Long userId, Long reservationId, List<UserBook> userBooks) {
 
-        User user = userService.findById(userId);
         Reservation reservation = findById(reservationId);
 
-        for (Book book : userBooks) {
-            if (book.getId() != null) {
-                Book dbBook = bookRepository.findById(book.getId())
-                        .map(bookEntityToBookMapper::convert)
+        for (UserBook userBook : userBooks) {
+            if (userBook.getId() != null) {
+                UserBook dbUserBook = userBookRepository.findById(userBook.getId())
+                        .map(userBookEntityToUserBookMapper::convert)
                         .orElse(null);
 
-                createReservationItem(dbBook, reservation);
-
-            } else {
-                //Book newBook = bookService.create(book);
-                //userBookService.create(newBook, user);
+                createReservationItem(dbUserBook, reservation);
             }
         }
     }
 
-    public Reservation createReservationItem(Book dbBook, Reservation reservation) {
+    /**
+     *
+     * @param dbBook
+     * @param reservation
+     */
+    public void createReservationItem(UserBook dbBook, Reservation reservation) {
+
+        UserBookEntity userBookEntity = userBookToUserBookEntityMapper.convert(dbBook);
         ReservationEntity reservationEntity = reservationToReservationEntityMapper.convert(reservation);
 
+
+        ReservationBooksEntity reservationBooksEntity = ReservationBooksEntity.builder()
+                .userBook(userBookEntity).reservation(reservationEntity)
+                .status("pending").updatedAt(LocalDate.now())
+                .build();
+
         ReservationEntity savedEntity = repository.save(reservationEntity);
-        return reservationEntityToReservationMapper.convert(savedEntity);
     }
 
     @Transactional

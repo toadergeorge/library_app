@@ -18,8 +18,6 @@ public class ReservationBooks {
 
     private ReservationEntity reservation;
 
-    private BookEntity book;
-
     private UserBookEntity userBook;
 
     private LocalDate createdAt;

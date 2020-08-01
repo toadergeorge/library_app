@@ -2,6 +2,7 @@ package com.library.library.controller;
 
 import com.library.library.domain.model.Book;
 import com.library.library.domain.model.User;
+import com.library.library.domain.model.UserBook;
 import com.library.library.exception.UserNotFoundException;
 import com.library.library.service.ReservationService;
 import com.library.library.service.UserBookService;
@@ -49,7 +50,7 @@ public class UserController {
 
     @PostMapping("/{userId}/Reservation/{reservationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addUserReservation(@PathVariable("userId") long userId, @PathVariable("reservationId") long reservationId, @RequestBody List<Book> userBooks) {
+    public void addUserReservation(@PathVariable("userId") long userId, @PathVariable("reservationId") long reservationId, @RequestBody List<UserBook> userBooks) {
         reservationService.createUserReservation(userId, reservationId, userBooks);
     }
 
