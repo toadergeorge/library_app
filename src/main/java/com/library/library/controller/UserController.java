@@ -1,8 +1,9 @@
 package com.library.library.controller;
 
+import com.library.library.domain.model.Book;
 import com.library.library.domain.model.User;
 import com.library.library.exception.UserNotFoundException;
-import com.library.library.service.AuthorService;
+import com.library.library.service.UserBookService;
 import com.library.library.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService service;
+    private final UserBookService userBookService;
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public User getOneUser(@PathVariable("id") long id) {
-
         return service.findById(id);
     }
 
@@ -36,6 +37,18 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
         return service.create(user);
+    }
+
+    @PostMapping("/{userId}/Books/")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addUserBook(@PathVariable("userId") long userId, @RequestBody List<Book> userBooks) {
+        service.createUserBook(userId, userBooks);
+    }
+
+    @DeleteMapping("/{userId}/Books/{userBookId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUserBook(@PathVariable("userBookId") long userBookId) {
+        userBookService.delete(userBookId);
     }
 
     @PutMapping("/{id}")

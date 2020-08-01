@@ -3,13 +3,12 @@ package com.library.library.service;
 import com.library.library.domain.entity.AuthorEntity;
 import com.library.library.domain.entity.UserEntity;
 import com.library.library.domain.model.Author;
+import com.library.library.domain.model.Book;
 import com.library.library.domain.model.User;
 import com.library.library.exception.AuthorNotFoundException;
-import com.library.library.mapper.AuthorEntityToAuthorMapper;
-import com.library.library.mapper.AuthorToAuthorEntityMapper;
-import com.library.library.mapper.UserEntityToUserMapper;
-import com.library.library.mapper.UserToUserEntityMapper;
+import com.library.library.mapper.*;
 import com.library.library.repository.AuthorRepository;
+import com.library.library.repository.BookRepository;
 import com.library.library.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,15 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository repository;
+    private final BookRepository bookRepository;
+
+    private final UserBookService userBookService;
+    private final BookService bookService;
 
     private final UserEntityToUserMapper userEntityToUserMapper;
     private final UserToUserEntityMapper userToUserMapper;
+    private final BookEntityToBookMapper userBookToBookMapper;
+
 
     public User findById(long userId) {
         return repository.findById(userId)
@@ -53,6 +58,25 @@ public class UserService {
                 .orElseThrow(() -> new AuthorNotFoundException("The user with id provided cannot be found"));
 
         updateFields(existingEntity, user);
+    }
+
+    @Transactional
+    public void createUserBook(long userId, List<Book> userBooks) {
+
+        User user = findById(userId);
+
+        for (Book book : userBooks) {
+            if (book.getId() != null) {
+                Book dbBook = bookRepository.findById(book.getId())
+                        .map(userBookToBookMapper::convert)
+                        .orElse(null);
+                userBookService.create(dbBook, user);
+
+            } else {
+                Book newBook = bookService.create(book);
+                userBookService.create(newBook, user);
+            }
+        }
     }
 
     private void updateFields(UserEntity existingEntity, User user) {

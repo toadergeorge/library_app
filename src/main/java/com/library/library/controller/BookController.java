@@ -2,6 +2,7 @@ package com.library.library.controller;
 
 import com.library.library.domain.model.Author;
 import com.library.library.domain.model.Book;
+import com.library.library.domain.model.Reservation;
 import com.library.library.exception.AuthorNotFoundException;
 import com.library.library.exception.BookNotFoundException;
 import com.library.library.service.AuthorService;
@@ -25,7 +26,6 @@ public class BookController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Book getOneBook(@PathVariable("id") long id) {
-
         return service.findById(id);
     }
 
