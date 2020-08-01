@@ -3,6 +3,7 @@ package com.library.library.controller;
 import com.library.library.domain.model.Book;
 import com.library.library.domain.model.User;
 import com.library.library.exception.UserNotFoundException;
+import com.library.library.service.ReservationService;
 import com.library.library.service.UserBookService;
 import com.library.library.service.UserService;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class UserController {
 
     private final UserService service;
     private final UserBookService userBookService;
+    private final ReservationService reservationService;
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -43,6 +45,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addUserBook(@PathVariable("userId") long userId, @RequestBody List<Book> userBooks) {
         service.createUserBook(userId, userBooks);
+    }
+
+    @PostMapping("/{userId}/Reservation/{reservationId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addUserReservation(@PathVariable("userId") long userId, @PathVariable("reservationId") long reservationId, @RequestBody List<Book> userBooks) {
+        reservationService.createUserReservation(userId, reservationId, userBooks);
     }
 
     @DeleteMapping("/{userId}/Books/{userBookId}")

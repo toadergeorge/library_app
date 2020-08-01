@@ -3,10 +3,13 @@ package com.library.library.service;
 import com.library.library.domain.entity.ReservationEntity;
 import com.library.library.domain.model.Book;
 import com.library.library.domain.model.Reservation;
+import com.library.library.domain.model.User;
 import com.library.library.exception.AuthorNotFoundException;
+import com.library.library.mapper.BookEntityToBookMapper;
 import com.library.library.mapper.ReservationEntityToReservationMapper;
 import com.library.library.mapper.ReservationToReservationEntityMapper;
 import com.library.library.mapper.UserToUserEntityMapper;
+import com.library.library.repository.BookRepository;
 import com.library.library.repository.ReservationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +23,14 @@ import java.util.stream.Collectors;
 public class ReservationService {
 
     private final ReservationRepository repository;
+    private final BookRepository bookRepository;
 
     private final ReservationEntityToReservationMapper reservationEntityToReservationMapper;
     private final ReservationToReservationEntityMapper reservationToReservationEntityMapper;
     private final UserToUserEntityMapper userToUserEntityMapper;
+    private final BookEntityToBookMapper bookEntityToBookMapper;
+
+    private final UserService userService;
 
     public Reservation findById(long reservationId) {
         return repository.findById(reservationId)
@@ -39,6 +46,34 @@ public class ReservationService {
     }
 
     public Reservation create(Reservation reservation) {
+        ReservationEntity reservationEntity = reservationToReservationEntityMapper.convert(reservation);
+
+        ReservationEntity savedEntity = repository.save(reservationEntity);
+        return reservationEntityToReservationMapper.convert(savedEntity);
+    }
+
+    @Transactional
+    public void createUserReservation(Long userId, Long reservationId, List<Book> userBooks) {
+
+        User user = userService.findById(userId);
+        Reservation reservation = findById(reservationId);
+
+        for (Book book : userBooks) {
+            if (book.getId() != null) {
+                Book dbBook = bookRepository.findById(book.getId())
+                        .map(bookEntityToBookMapper::convert)
+                        .orElse(null);
+
+                createReservationItem(dbBook, reservation);
+
+            } else {
+                //Book newBook = bookService.create(book);
+                //userBookService.create(newBook, user);
+            }
+        }
+    }
+
+    public Reservation createReservationItem(Book dbBook, Reservation reservation) {
         ReservationEntity reservationEntity = reservationToReservationEntityMapper.convert(reservation);
 
         ReservationEntity savedEntity = repository.save(reservationEntity);

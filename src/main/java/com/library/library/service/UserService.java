@@ -29,8 +29,7 @@ public class UserService {
 
     private final UserEntityToUserMapper userEntityToUserMapper;
     private final UserToUserEntityMapper userToUserMapper;
-    private final BookEntityToBookMapper userBookToBookMapper;
-
+    private final BookEntityToBookMapper bookEntityToBookMapper;
 
     public User findById(long userId) {
         return repository.findById(userId)
@@ -68,7 +67,7 @@ public class UserService {
         for (Book book : userBooks) {
             if (book.getId() != null) {
                 Book dbBook = bookRepository.findById(book.getId())
-                        .map(userBookToBookMapper::convert)
+                        .map(bookEntityToBookMapper::convert)
                         .orElse(null);
                 userBookService.create(dbBook, user);
 
